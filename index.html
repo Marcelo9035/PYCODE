@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#111713" />
+    <meta name="description" content="Prepare o empacotamento de aplicativos Python para Windows com o PyCode Builder." />
+    <title>PyCode Builder — bancada de build</title>
+    <link rel="icon" type="image/svg+xml" href="./pycode-mark.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Navegação principal">
+        <a class="brand" href="#top" aria-label="PyCode Builder — início">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none"><path d="m12.3 10-5 6 5 6M19.7 10l5 6-5 6M18 7.5l-4 17" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="brand-copy"><strong>pycode</strong><span>builder</span></span>
+        </a>
+
+        <div class="sidebar-label">WORKSPACE</div>
+        <nav class="side-nav">
+          <a class="nav-item active" href="#workspace" aria-current="page">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3" y="3" width="5" height="5" rx="1.2" stroke="currentColor" stroke-width="1.5"/><rect x="12" y="3" width="5" height="5" rx="1.2" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="12" width="5" height="5" rx="1.2" stroke="currentColor" stroke-width="1.5"/><path d="M12 14.5h5M14.5 12v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span>Construtor</span><span class="nav-dot"></span>
+          </a>
+          <a class="nav-item muted" href="#build-log" title="Histórico desta sessão">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 5.5h12M4 10h12M4 14.5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="15.5" cy="14.5" r="2" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>Atividade</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-rule"></div>
+        <div class="sidebar-label">ATALHOS</div>
+        <button class="nav-item nav-button" id="load-side-button" type="button">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 13V3m0 0L6.5 6.5M10 3l3.5 3.5M4 12v4a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Carregar .py</span><span class="shortcut">⌘ O</span>
+        </button>
+        <button class="nav-item nav-button" id="clear-side-button" type="button">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 5.5h12M8 5.5V4h4v1.5m2.5 0-.7 10.1a1 1 0 0 1-1 .9H7.2a1 1 0 0 1-1-.9L5.5 5.5m3 3v5m3-5v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Limpar projeto</span>
+        </button>
+
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-version">
+          <span class="version-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2.7 12 7l4.7.7-3.4 3.3.8 4.7L10 13.5l-4.2 2.2.8-4.7-3.4-3.3L8 7l2-4.3Z" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/></svg></span>
+          <span><strong>PyCode Builder</strong><small>Protótipo web · v1.0</small></span>
+          <span class="version-indicator" title="Interface pronta"></span>
+        </div>
+      </aside>
+
+      <main class="main-area" id="top">
+        <header class="topbar">
+          <div class="breadcrumbs"><span>Workspace</span><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m6 3 5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><strong>Novo build</strong></div>
+          <div class="topbar-actions">
+            <span class="session-pill"><span></span> Sessão local</span>
+            <button class="icon-button" id="help-button" type="button" aria-label="Sobre o protótipo" title="Sobre o protótipo">
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8.2 7.8a1.9 1.9 0 1 1 3.4 1.1c-.8 1-1.6 1.2-1.6 2.6m0 2.5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <span class="avatar" aria-label="Perfil local">PC</span>
+          </div>
+        </header>
+
+        <div class="workspace-content" id="workspace">
+          <section class="page-heading" aria-labelledby="page-title">
+            <div>
+              <div class="eyebrow"><span class="eyebrow-line"></span> PYTHON → WINDOWS</div>
+              <h1 id="page-title">Seu próximo app começa <span>por aqui.</span></h1>
+              <p>Prepare seu projeto Python para o fluxo de empacotamento.</p>
+            </div>
+            <div class="heading-status"><span class="status-pulse"></span> Rascunho <span class="status-divider">·</span> não salvo</div>
+          </section>
+
+          <div class="notice" role="note">
+            <span class="notice-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M10 9v4m0-6h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+            <p><strong>Modo demonstração.</strong> Esta interface não executa PyInstaller nem gera um `.exe`; a compilação real requer PyInstaller em um ambiente Windows. Seus arquivos são lidos apenas nesta sessão e nunca são executados pelo site.</p>
+            <button class="notice-close" type="button" aria-label="Fechar aviso" id="dismiss-notice">×</button>
+          </div>
+
+          <div class="workbench">
+            <section class="project-column" aria-label="Projeto Python">
+              <div class="section-header">
+                <div class="step-badge">01</div>
+                <div class="section-heading-copy"><h2>Seu código</h2><p>Comece carregando um arquivo Python.</p></div>
+                <div class="view-menu-wrap">
+                  <button class="view-menu-trigger" id="view-menu-trigger" type="button" aria-expanded="false" aria-controls="view-menu">
+                    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 5.5h14M3 10h14M3 14.5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="15" cy="14.5" r="1.5" stroke="currentColor" stroke-width="1.5"/></svg> Visualização <svg class="chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m4 6 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="view-menu" id="view-menu" hidden>
+                    <span class="menu-caption">PAINÉIS</span>
+                    <label class="menu-check-row" for="show-code-toggle"><span class="menu-check-copy"><strong>Caixa de Texto</strong><small>Exibir editor Python</small></span><input id="show-code-toggle" type="checkbox" role="switch" aria-label="Caixa de Texto"></label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="source-card card">
+                <div class="source-card-heading">
+                  <div class="source-heading-left"><span class="file-type-icon"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 2.75h6l4 4v10.5H5a1 1 0 0 1-1-1V3.75a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M11 3v4h4M7 11h6M7 14h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span><div><h3>Arquivo de origem</h3><p>Um único arquivo <code>.py</code> para começar</p></div></div>
+                  <span class="file-state" id="file-state"><span></span> aguardando arquivo</span>
+                </div>
+                <div class="drop-zone" id="drop-zone" role="region" aria-label="Área para arrastar e soltar um arquivo .py">
+                  <input id="file-input" type="file" accept=".py,text/x-python,text/plain" hidden />
+                  <div class="upload-glyph"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15V4m0 0L8 8m4-4 4 4M5 14v4.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                  <div class="drop-copy"><strong>Arraste seu arquivo <span>.py</span> até aqui</strong><small>ou selecione direto do seu computador</small></div>
+                  <button class="button button-secondary button-small" id="choose-file-button" type="button">Escolher arquivo</button>
+                </div>
+                <div class="file-detail" id="file-detail" hidden>
+                  <span class="file-detail-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M5 2.75h6l4 4v10.5H5a1 1 0 0 1-1-1V3.75a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round"/><path d="M11 3v4h4" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round"/><path d="m7 12 1.5 1.5L12.5 9.5" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="file-detail-copy"><strong id="file-name">—</strong><small id="file-meta">—</small></span>
+                  <span class="file-detail-badge">PY</span>
+                  <button class="icon-button file-remove" id="remove-file-button" type="button" aria-label="Remover arquivo" title="Remover arquivo"><svg viewBox="0 0 20 20" fill="none"><path d="m6 6 8 8m0-8-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+                </div>
+                <div class="source-or"><span></span><small>ou use um exemplo</small><span></span></div>
+                <button class="example-button" id="example-button" type="button"><span class="example-icon">{ }</span><span>Carregar código de exemplo</span><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10m0 0L9 4m4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              </div>
+
+              <div class="editor-card card" id="editor-card" hidden>
+                <div class="editor-toolbar"><div class="editor-file-tab"><span class="python-dot">●</span><span id="editor-filename">sem_arquivo.py</span><span class="dirty-mark" id="dirty-mark" hidden>●</span></div><div class="editor-toolbar-right"><span id="editor-line-count">0 linhas</span><button class="editor-clear" type="button" id="clear-code-button">Limpar código</button></div></div>
+                <div class="editor-body"><div class="line-numbers" id="line-numbers" aria-hidden="true">1</div><textarea id="code-editor" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="Editor de código Python" placeholder="# Cole ou escreva seu código Python aqui…"></textarea></div>
+                <div class="editor-footer"><span><span class="live-dot"></span> Editor local</span><span id="editor-characters">0 caracteres</span></div>
+              </div>
+
+              <div class="code-preview card" id="code-preview">
+                <div class="preview-topline"><div class="preview-title"><span class="preview-pip"></span> PRÉVIA DA FONTE</div><span class="preview-lang">PYTHON</span></div>
+                <div class="preview-empty" id="preview-empty"><span class="empty-brackets">{ }</span><span>Seu código aparecerá aqui</span><small>Importe um arquivo ou carregue um exemplo para visualizar a fonte.</small></div>
+                <pre class="preview-code" id="preview-code" hidden><code id="preview-code-text"></code></pre>
+                <div class="preview-footer"><span><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.25"/><path d="M8 7.25v3M8 5.3h.01" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg> Fonte visualizada com segurança</span><span id="source-stats">sem conteúdo</span></div>
+              </div>
+            </section>
+
+            <aside class="settings-column" aria-label="Configurações e atividade do build">
+              <section class="settings-card card" aria-labelledby="settings-title">
+                <div class="settings-card-heading"><div class="step-badge">02</div><div><h2 id="settings-title">Configurar build</h2><p>Personalize seu aplicativo Windows.</p></div></div>
+                <div class="field-group"><label for="app-name">Nome do aplicativo</label><div class="input-shell"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="2.5" y="2.5" width="13" height="13" rx="3" stroke="currentColor" stroke-width="1.25"/><path d="M6 7.25h6m-6 3.5h4" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg><input id="app-name" type="text" value="MeuAplicativo" maxlength="64" placeholder="Ex.: MeuAplicativo" autocomplete="off" /></div><small class="field-hint" id="name-hint">Sem espaços ou caracteres especiais.</small></div>
+                <div class="field-group"><label for="output-folder">Pasta de saída</label><div class="input-shell"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2.5 5.25a1.5 1.5 0 0 1 1.5-1.5h3.25l1.5 1.75h5.75A1.5 1.5 0 0 1 16 7v6.25a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5V5.25Z" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/></svg><input id="output-folder" type="text" value="C:\Builds" placeholder="C:\Builds" autocomplete="off" spellcheck="false" /></div><small class="field-hint">Caminho de destino, por exemplo C:\Builds.</small></div>
+
+                <div class="settings-divider"></div>
+                <div class="option-heading"><span>FORMATO DO EXECUTÁVEL</span><span class="info-tip" title="onefile: um executável. onedir: pasta com os arquivos.">i</span></div>
+                <div class="segmented" role="radiogroup" aria-label="Formato de empacotamento"><button class="segment active" type="button" data-mode="onefile" role="radio" aria-checked="true"><span class="segment-icon">▣</span><span>onefile</span></button><button class="segment" type="button" data-mode="onedir" role="radio" aria-checked="false"><span class="segment-icon">▤</span><span>onedir</span></button></div>
+                <div class="mode-description" id="mode-description">Um único arquivo `.exe` fácil de compartilhar.</div>
+
+                <div class="console-row"><div class="console-copy"><strong>Sem console</strong><small>Oculta a janela de terminal</small></div><label class="switch"><input id="no-console" type="checkbox" checked aria-label="Gerar aplicativo sem console"><span class="switch-track"></span></label></div>
+
+                <details class="advanced-options" id="advanced-options">
+                  <summary><span><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="m7 3 1-1h2l1 1 1.5.4 1.3-.2 1.4 1.4-.2 1.3.4 1.5 1 1v2l-1 1-.4 1.5.2 1.3-1.4 1.4-1.3-.2-1.5.4-1 1H8l-1-1-1.5-.4-1.3.2-1.4-1.4.2-1.3-.4-1.5-1-1v-2l1-1 .4-1.5-.2-1.3 1.4-1.4 1.3.2L7 3Z" transform="translate(0 -.2) scale(.9)" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/><circle cx="9" cy="9" r="2.4" stroke="currentColor" stroke-width="1.2"/></svg>Opções avançadas</span><svg class="advanced-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m4 6 4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+                  <div class="advanced-body">
+                    <div class="field-group"><label for="app-version">Versão</label><input class="plain-input" id="app-version" type="text" value="1.0.0" placeholder="1.0.0" maxlength="32" /></div>
+                    <div class="field-group"><label for="app-author">Autor</label><input class="plain-input" id="app-author" type="text" placeholder="Seu nome ou empresa" maxlength="80" /></div>
+                    <div class="field-group"><label for="app-description">Descrição</label><textarea class="plain-input description-input" id="app-description" rows="2" placeholder="O que seu aplicativo faz?" maxlength="240"></textarea></div>
+                    <div class="file-option-row"><div><strong>Ícone do aplicativo</strong><small id="icon-file-label">Arquivo .ico opcional</small></div><label class="mini-file-button" for="icon-file">Procurar<input id="icon-file" type="file" accept=".ico,image/x-icon" hidden /></label></div>
+                    <div class="file-option-row"><div><strong>Arquivos e assets</strong><small id="assets-file-label">Imagens, dados e outros</small></div><label class="mini-file-button" for="assets-files">Adicionar<input id="assets-files" type="file" multiple hidden /></label></div>
+                    <label class="installer-option"><input id="prepare-installer" type="checkbox" /><span class="fake-check"></span><span><strong>Preparar instalador</strong><small>Opção de distribuição (demonstrativa)</small></span></label>
+                  </div>
+                </details>
+
+                <button class="button button-build" type="button" id="build-button"><span class="build-button-spark">✳</span><span id="build-button-label">Gerar aplicativo</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12m0 0-4-4m4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                <p class="build-caption"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.8 13 4v3.4c0 3.2-2 5.3-5 6.8-3-1.5-5-3.6-5-6.8V4l5-2.2Z" stroke="currentColor" stroke-width="1.15" stroke-linejoin="round"/><path d="m6.2 7.8 1.2 1.2 2.5-2.6" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/></svg>O código é apenas lido e permanece nesta página.</p>
+              </section>
+
+              <section class="build-card card" id="build-log" aria-labelledby="build-log-title">
+                <div class="build-card-heading"><div><div class="activity-eyebrow"><span class="activity-dot"></span> ATIVIDADE</div><h2 id="build-log-title">Registro do build</h2></div><button class="icon-button log-clear" id="clear-log-button" type="button" aria-label="Limpar registro" title="Limpar registro"><svg viewBox="0 0 18 18" fill="none"><path d="M3.5 5h11M7 5V3.5h4V5m2.1 0-.6 9.2a1 1 0 0 1-1 .9H6.5a1 1 0 0 1-1-.9L4.9 5m3 2.5v4.8m2.2-4.8v4.8" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+                <div class="progress-block" id="progress-block" hidden><div class="progress-meta"><span id="progress-label">Preparando…</span><span id="progress-value">0%</span></div><div class="progress-track"><span class="progress-fill" id="progress-fill"></span></div></div>
+                <div class="log-list" id="log-list" aria-live="polite" aria-relevant="additions text"><div class="log-empty" id="log-empty"><span class="log-empty-mark">⌁</span><strong>Tudo pronto para começar</strong><small>As atualizações do seu build aparecem aqui.</small></div></div>
+                <div class="build-card-footer"><span><span class="footer-live-dot"></span> Monitor local</span><button id="copy-log-button" type="button">Copiar log</button></div>
+              </section>
+            </aside>
+          </div>
+          <footer class="workspace-footer"><span>PYCODE BUILDER <span class="footer-separator">/</span> PROTÓTIPO DE INTERFACE</span><span>Feito para empacotar com clareza <span class="footer-heart">✳</span></span></footer>
+        </div>
+      </main>
+    </div>
+    <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+    <dialog class="about-dialog" id="about-dialog"><div class="about-top"><span class="about-mark"><svg viewBox="0 0 32 32" fill="none"><path d="m12.3 10-5 6 5 6M19.7 10l5 6-5 6M18 7.5l-4 17" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><button class="icon-button" id="close-about" type="button" aria-label="Fechar">×</button></div><p class="eyebrow">SOBRE ESTA EXPERIÊNCIA</p><h2>Uma bancada. <span>Um fluxo mais claro.</span></h2><p class="about-copy">O PyCode Builder é um protótipo de interface para organizar o empacotamento de projetos Python no Windows.</p><div class="about-warning"><strong>O que esta demonstração faz</strong><p>Lê arquivos `.py` localmente para visualizar o código e simula etapas de build na tela. Não envia nem executa código, não chama PyInstaller e não cria arquivos `.exe`.</p></div><button class="button button-secondary about-done" id="about-done" type="button">Entendi</button></dialog>
+  </body>
+</html>

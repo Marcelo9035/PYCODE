@@ -1,0 +1,63 @@
+{
+  "name": "pycode-builder-desktop",
+  "version": "1.0.0",
+  "description": "Aplicativo desktop PyCode Builder para Windows",
+  "author": "PyCode Builder",
+  "license": "UNLICENSED",
+  "private": true,
+  "packageManager": "npm@10.9.2",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win nsis --x64"
+  },
+  "devDependencies": {
+    "electron": "44.5.1",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "com.pycodebuilder.desktop",
+    "productName": "PyCode Builder",
+    "asar": true,
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "files": [
+      "index.html",
+      "styles.css",
+      "app.js",
+      "pycode-mark.svg",
+      "electron/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "build/pycode.ico",
+        "to": "pycode.ico"
+      }
+    ],
+    "win": {
+      "icon": "build/pycode.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "artifactName": "PyCodeBuilder-Setup-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "PyCode Builder",
+      "deleteAppDataOnUninstall": false,
+      "language": 1046,
+      "displayLanguageSelector": false
+    }
+  }
+}
